@@ -19,8 +19,8 @@ fi
 tomorrow=$(gdate -d "tomorrow" +"$dateformat")
 
 new_york_times() {
-    numdays=$(( ($(gdate +%s) - $(gdate -d $lastchecked +%s) )/(60*60*24) ))
-    if [[ $numdays > 0 ]]
+    numdays=$(( ($(gdate +%s) - $(gdate -d $lastchecked +%s) )/(60*60*24) + 1))
+    if [[ $numdays > 1 ]]
     then
         echo "Retrieving $numdays puzzles from New York Times"
         puzzids=`curl -b "$cookies" "https://nyt-games-prd.appspot.com/svc/crosswords/v3/36569100/puzzles.json?publish_type=daily&sort_order=asc&sort_by=print_date&limit=$numdays" | jq '.results[].puzzle_id'`
@@ -53,7 +53,8 @@ while [ $lastchecked != $tomorrow ]
 do
     echo "Retrieving puzzles for $lastchecked"
     washington_post_sunday
-    newsday
+    # Don't like doing newsdays on paper for some reason
+    # newsday
     lastchecked=$(gdate -d "$lastchecked tomorrow" +$dateformat)
 done
 
