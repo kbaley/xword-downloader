@@ -20,6 +20,7 @@ tomorrow=$(gdate -d "tomorrow" +"$dateformat")
 
 new_york_times() {
     numdays=$(( ($(gdate +%s) - $(gdate -d $lastchecked +%s) )/(60*60*24) + 1))
+    echo "numdays=$(( ($(gdate +%s) - $(gdate -d $lastchecked +%s) )/(60*60*24) + 1))"
     if [[ $numdays > 1 ]]
     then
         echo "Retrieving $numdays puzzles from New York Times"
@@ -58,5 +59,6 @@ do
     lastchecked=$(gdate -d "$lastchecked tomorrow" +$dateformat)
 done
 
- rm $FILE
- echo $lastchecked >> $FILE
+lastchecked=$(date +$dateformat)
+rm $FILE
+echo $lastchecked >> $FILE
