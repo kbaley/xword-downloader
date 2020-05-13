@@ -1,0 +1,5 @@
+# Config file
+# Rename to xword.config and customize to your needs
+dest=/path/to/download/folder
+# Delete any you don't want to download 
+subscriptions=("newsday" "nyt" "wapoSunday")
