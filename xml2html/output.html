@@ -1,0 +1,381 @@
+﻿<html xmlns:my="https://baley.org/my" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        .page {
+            display: grid;
+            grid-template-columns: 67% 33%;
+        }
+        .grid {
+            grid-column: 1;
+            grid-row: 2;
+            display: grid;
+            margin: 10px;
+            grid-template-columns: repeat(15, 30px);
+            grid-template-rows: repeat(15, 30px);
+        }
+        .box {
+            border: 1px solid #999;
+            height: 29px;
+            width: 29px;
+            padding: 0;
+        }
+        .filled {
+            background-color: #999;
+        }
+        .box:after {
+            content: attr(clue);
+            display: inline-block;
+            font-size: 10px;
+            margin: 0 0 0 2px;
+        }
+        .clues {
+            border: 2px solid black;
+            margin: 5px;
+            padding: 5px;
+            font-size: 10px; 
+        }
+        .across {
+            grid-column: 1;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            gap: 10px;
+        }
+        .down {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            float: right;
+        }
+        .header {
+            grid-column: 1 / span 2;
+        }
+            </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="across clues">
+        <div class="header">ACROSS
+                    </div>
+        <div class="content">
+          <div class="clue">1) Gem associated with good luck in Chinese culture</div>
+          <div class="clue">5) Sahara animal</div>
+          <div class="clue">10) Jerry's partner</div>
+          <div class="clue">13) Unaccounted for, for short</div>
+          <div class="clue">14) Studio Ghibli specialty</div>
+          <div class="clue">15) Bring on board</div>
+          <div class="clue">16) Stay-at-home's spouse, perhaps</div>
+          <div class="clue">18) Toaster waffle brand</div>
+          <div class="clue">19) Glide down a snowy slope</div>
+          <div class="clue">20) Ikebana vessel</div>
+          <div class="clue">21) Like the LDS Church</div>
+          <div class="clue">23) Accompany</div>
+          <div class="clue">25) Spanish for "I love you"</div>
+          <div class="clue">26) Ask nosy questions</div>
+          <div class="clue">27) Vaccine pioneer Louis</div>
+          <div class="clue">29) Brand name that's pig Latin for a band name</div>
+          <div class="clue">32) "Chicago" star Richard</div>
+          <div class="clue">33) Small earring</div>
+          <div class="clue">35) Negative conjunction</div>
+          <div class="clue">36) Fit to be tied</div>
+        </div>
+        <div class="content">
+          <div class="clue">37) She/___ pronouns</div>
+          <div class="clue">38) Destine for failure</div>
+          <div class="clue">40) Bumper ___</div>
+          <div class="clue">41) Cheeky</div>
+          <div class="clue">43) Places for genetic testing</div>
+          <div class="clue">45) Every last bit</div>
+          <div class="clue">46) Smiles widely</div>
+          <div class="clue">47) Insurance filings</div>
+          <div class="clue">50) Org. that makes a lot of cents</div>
+          <div class="clue">52) ___ splints (runner's woe)</div>
+          <div class="clue">53) "Gotcha!"</div>
+          <div class="clue">55) Common lunchtime</div>
+          <div class="clue">56) It's no longer full and not yet new</div>
+          <div class="clue">59) Plunge</div>
+          <div class="clue">60) "You got me"</div>
+          <div class="clue">61) Gait slower than a canter</div>
+          <div class="clue">62) Grand ___ Opry</div>
+          <div class="clue">63) Students might take them</div>
+          <div class="clue">64) Workbench gripper</div>
+        </div>
+      </div>
+      <div class="down">
+        <div class="puzzle-header">
+          <div class="puzzle-provider">USA Today Crosswords</div>
+          <div class="puzzle-title">HIDDEN INGREDIENT</div>
+          <div class="puzzle-author">By Zhouqin Burnikel</div>
+          <div class="puzzle-editor">Edited By Erik Agard</div>
+        </div>
+        <div class="clues">
+          <div class="clue">1) Face parts</div>
+          <div class="clue">2) Stopped sleeping</div>
+          <div class="clue">3) Burke hailed by the New Yorker as "basketball's best TV analyst"</div>
+          <div class="clue">4) Relative of the caribou</div>
+          <div class="clue">5) Yellow songbird</div>
+          <div class="clue">6) Apprehensive feeling</div>
+          <div class="clue">7) Silent performer</div>
+          <div class="clue">8) Music genre associated with 6-Down</div>
+          <div class="clue">9) "I wanna look!"</div>
+          <div class="clue">10) Windbags</div>
+          <div class="clue">11) Consequently</div>
+          <div class="clue">12) Ultra-bright</div>
+          <div class="clue">15) Big name in luxury bags</div>
+          <div class="clue">17) Off-white shade</div>
+          <div class="clue">22) Granola tidbit</div>
+          <div class="clue">24) Letters for some tax experts</div>
+          <div class="clue">25) Small desserts</div>
+          <div class="clue">27) Homophonous fruits</div>
+          <div class="clue">28) Has regrets about</div>
+          <div class="clue">29) "In addition . . ."</div>
+          <div class="clue">30) Miffed state</div>
+          <div class="clue">31) Regrettable action</div>
+          <div class="clue">32) Seizes</div>
+          <div class="clue">34) Deadpan</div>
+          <div class="clue">36) Exasperated exclamation</div>
+          <div class="clue">39) ___ biology</div>
+          <div class="clue">41) Interpreter's challenge</div>
+          <div class="clue">42) Kentucky-born boxing legend</div>
+          <div class="clue">44) "F9" director Justin</div>
+          <div class="clue">45) Dresses with flares</div>
+          <div class="clue">47) Baked potato bit</div>
+          <div class="clue">48) New Zealand people</div>
+          <div class="clue">49) Waves away</div>
+          <div class="clue">50) Revert</div>
+          <div class="clue">51) Garden center bagful</div>
+          <div class="clue">52) Miffed state</div>
+          <div class="clue">54) Part of a.m.</div>
+          <div class="clue">57) "That was years ___"</div>
+          <div class="clue">58) "The Challenge" network</div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="box" clue="1"></div>
+        <div class="box" clue="2"></div>
+        <div class="box" clue="3"></div>
+        <div class="box" clue="4"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="5"></div>
+        <div class="box" clue="6"></div>
+        <div class="box" clue="7"></div>
+        <div class="box" clue="8"></div>
+        <div class="box" clue="9"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="10"></div>
+        <div class="box" clue="11"></div>
+        <div class="box" clue="12"></div>
+        <div class="box" clue="13"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="14"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="15"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="16"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="17"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="18"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="19"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="20"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="21"></div>
+        <div class="box" clue="22"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="23"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="24"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="25"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="26"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="27"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="28"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="29"></div>
+        <div class="box" clue="30"></div>
+        <div class="box" clue="31"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="32"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="33"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="34"></div>
+        <div class="box" clue="35"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="36"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="37"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="38"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="39"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="40"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="41"></div>
+        <div class="box" clue="42"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="43"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="44"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="45"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="46"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="47"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="48"></div>
+        <div class="box" clue="49"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="50"></div>
+        <div class="box" clue="51"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="52"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="53"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="54"></div>
+        <div class="box" clue="55"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="56"></div>
+        <div class="box" clue="57"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="58"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="59"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="60"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="61"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue="62"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="63"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="filled box"></div>
+        <div class="box" clue="64"></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+        <div class="box" clue=""></div>
+      </div>
+    </div>
+  </body>
+</html>

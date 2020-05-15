@@ -30,9 +30,15 @@ To manage these, I've set up some zaps in Zapier. These ones parse emails and sa
 - [Extract PDF from AVCX and Inkubator](https://zapier.com/shared/bb19d3831467fdf7210a835e8b14e0d80842b4c6)
 - [Extract PDF from Crossword Nation](https://zapier.com/shared/d2ded7c36035204ee7c164ffc51fd3e4ad825bef)
 
-These were done with Zapier's "New Attachment in Gmail" zap. Each one triggers on any emails from one of the specified crossword providers. Then it filters the attachment to the one I want since the providers usually include several, for example, the solution or different versions of the crossword. After filtering, it is simply saved to a specified folder in Google Drive.
+These were done with Zapier's "New Attachment in Gmail" event. Each one triggers on any emails from one of the specified crossword providers. Then it filters the attachment to the one I want since the providers usually include several, for example, the solution or different versions of the crossword. After filtering, it is simply saved to a specified folder in Google Drive.
 
-Matt Gaffney's crosswords need a bit more work. His are sent from Patreon which doesn't actually attach the crosswords but instead sends a link to them. I couldn't find a way to parse the link with Zapier's built-in email parser so I created an account with mailparser.io, which also integrates with Zapier.
+Matt Gaffney's crosswords need a bit more work. His are sent from Patreon which doesn't actually attach the crosswords but instead sends a link to them. I couldn't find a way to parse the link with Zapier's built-in email parser so I created an account with mailparser.io, which also integrates with Zapier. It took a bit of fiddling to get the parsing rule right.
+
+Using Mailparser also means the parsing isn't done automatically when the email comes in. Instead, I need to forward the email to a special mailparser.io email address to trigger the rule. This was easy enough to automate with a Gmail filter to auto-forward any mail meeting certain criteria, then auto-archiving the email in Gmail.
+
+In Zapier, this uses the "New Email Parsed in Mailparser" and "Upload File in Google Drive" events. No filter is needed because it's done in Mailparser.
+
+This entire setup requires 3 zaps in Zapier and an account with Mailparser. The free Mailparser account allows 30 emails per month which is more than enough for Matt Gaffney (typically 4 or 5 plus an occasional informational email that slips through the filter).
 
 ## The eventual workflow
 
@@ -41,3 +47,17 @@ Matt Gaffney's crosswords need a bit more work. His are sent from Patreon which 
 - Print
 - Solve
 - Repeat when you run out
+
+## Next
+
+I want to tackle some other providers that are a bit more difficult to automate, either because they have no explicit download API or they provide it in some format that requires some conversion before it gets printed.
+
+## Other crossword resources
+
+- [Crosswords Classic on iOS](https://apps.apple.com/us/app/crosswords-classic/id284036524)
+  - There's a newer one that is probably better. I'm used to the classic one and still prefer it
+- [Shortyz on Android](https://play.google.com/store/apps/details?id=com.totsp.crossword.shortyz&hl=en)
+  - Back when I had an Android device, this was a great app. I can only assume it still is. Either way, its source code is [open source](https://github.com/kebernet/shortyz)
+    
+    https://github.com/kebernet/shortyz)
+  - Back 

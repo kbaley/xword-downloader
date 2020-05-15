@@ -1,0 +1,12 @@
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/bin/Debug/netcoreapp3.1/xml2html.deps.json
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/bin/Debug/netcoreapp3.1/xml2html.runtimeconfig.json
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/bin/Debug/netcoreapp3.1/xml2html.runtimeconfig.dev.json
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/bin/Debug/netcoreapp3.1/xml2html.dll
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/bin/Debug/netcoreapp3.1/xml2html.pdb
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.csprojAssemblyReference.cache
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.csproj.CoreCompileInputs.cache
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.AssemblyInfoInputs.cache
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.AssemblyInfo.cs
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.dll
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.pdb
+/Users/kylebaley/Documents/workspace/code/xword-downloader/xml2html/obj/Debug/netcoreapp3.1/xml2html.genruntimeconfig.cache

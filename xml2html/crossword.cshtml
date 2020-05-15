@@ -1,0 +1,114 @@
+<html>
+
+<head>
+    <style>
+        .page {
+            display: grid;
+            grid-template-columns: 67% 33%;
+        }
+        .grid {
+            grid-column: 1;
+            grid-row: 2;
+            display: grid;
+            margin: 10px;
+            grid-template-columns: repeat(15, 28px);
+            grid-template-rows: repeat(15, 28px);
+        }
+        .box {
+            border: 1px solid black;
+            height: 27px;
+            width: 27px;
+            padding: 0;
+        }
+        .filled {
+            background-color: #000;
+        }
+        .box:after {
+            content: attr(clue);
+            display: inline-block;
+            font-size: 10px;
+            margin: 0 0 0 2px;
+        }
+        .clues {
+            border: 2px solid black;
+            margin: 5px;
+            padding: 5px;
+        }
+        .across {
+            grid-column: 1;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            gap: 10px;
+        }
+        .down {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            float: right;
+        }
+        .header {
+            grid-column: 1 / span 2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+    <div class="across clues">
+        <div class="header">
+            ACROSS
+        </div>
+        <div class="content">
+            <div class="clue">1) Face parts</div>
+        </div>
+        <div class="content">
+            <div class="clue">1) Face parts</div>
+        </div>
+    </div>
+    <div class="down">
+        <div class="puzzle-header">
+            <div class="puzzle-provider">{{p</div>
+            <div class="puzzle-title">HIDDEN INGREDIENT</div>
+            <div class="puzzle-author">By <span>the author</span></div>
+            <div class="puzzle-editor">Edited By <span>Erik Agard</span></div>
+        </div>
+        <div class="clues">
+            <div class="clue">1) Face parts</div>
+            <div class="clue">2) Stopped sleeping</div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="box" clue="1"></div>
+        <div class="box" clue="2"></div>
+        <div class="box" clue="3"></div>
+        <div class="box" clue="4"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="5"></div>
+        <div class="box" clue="6"></div>
+        <div class="box" clue="7"></div>
+        <div class="box" clue="8"></div>
+        <div class="box" clue="9"></div>
+        <div class="filled box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="10"></div>
+        <div class="box" clue="11"></div>
+        <div class="box" clue="12"></div>
+        <div class="box" clue="13"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="14"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="filled box"></div>
+        <div class="box" clue="15"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+</div>
+</body>
+
+</html>
