@@ -1,4 +1,4 @@
-﻿using System.Xml;
+﻿using System.Globalization;
 using System.Xml.Xsl;
 
 namespace xml2html
@@ -8,9 +8,15 @@ namespace xml2html
         static void Main(string[] args)
         {
             var xslt = new XslCompiledTransform();
-            var settings = new XsltSettings(true, true);
-            xslt.Load("uclick.xslt", settings, new XmlUrlResolver());
-            xslt.Transform("usaon200510-data.xml", "output.html");
+            xslt.Load("uclick.xslt");
+            var filename = "output.html";
+            if (args.Length > 1) {
+                filename = args[1];
+                if (!filename.EndsWith(".html", true, CultureInfo.InvariantCulture)) {
+                    filename += ".html";
+                }
+            }
+            xslt.Transform(args[0], filename);
         }
     }
 }

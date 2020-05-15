@@ -36,6 +36,12 @@ new_york_times() {
     fi
 }
 
+usa_today() {
+    echo "USA Today: $lastchecked"
+    usadate = $(gdate -d $lastchecked +'%Y%m%d')
+    
+}
+
 washington_post_sunday() {
     puzzle_day=$(gdate -d $lastchecked +"%u")
     if [ $puzzle_day == 7 ]; then
@@ -88,6 +94,9 @@ retrieve_crosswords() {
         fi
         if [[ ${subscriptions[@]}  =~ "newsday" ]]; then
             newsday
+        fi
+        if [[ ${subscriptions[@]} =~ "usaToday" ]]; then
+            usa_today
         fi
         lastchecked=$(gdate -d "$lastchecked tomorrow" +$dateformat)
     done

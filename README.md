@@ -16,6 +16,14 @@ By providing a `--merge` or `-m` parameter to the app, it will:
 
 This uses the built-in MacOS PDF-merging python script.
 
+## Uclick providers
+
+- Separate utility to convert XML to HTML with XSLT
+- wkhtmltopdf doesn't work with CSS grid
+- /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --print-to-pdf-no-header --print-to-pdf="./moo.pdf" ./output.html
+- --print-to-pdf-no-header is just in Chrome Canary so far
+- Convert HTML to PDF with wkhtmltopdf
+
 ## Email providers
 
 I've subscribed to some providers by email:

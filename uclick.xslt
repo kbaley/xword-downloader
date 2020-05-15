@@ -23,6 +23,10 @@
 
             <head>
                 <style>
+        @media print {
+            @page { margin: 0; }
+            body { margin: 1.6cm }
+        }
         .page {
             display: grid;
             grid-template-columns: 67% 33%;
