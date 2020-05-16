@@ -18,11 +18,21 @@ This uses the built-in MacOS PDF-merging python script.
 
 ## Uclick providers
 
-- Separate utility to convert XML to HTML with XSLT
-- wkhtmltopdf doesn't work with CSS grid
-- /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --print-to-pdf-no-header --print-to-pdf="./moo.pdf" ./output.html
-- --print-to-pdf-no-header is just in Chrome Canary so far
-- Convert HTML to PDF with wkhtmltopdf
+Puzzle providers that use uclick.com as their provider are a bit tricky. The puzzles are provided in what appears to be a custom XML format ([sample USA Today puzzle](http://picayune.uclick.com/comics/usaon/data/usaon200510-data.xml)). Based on an idea from [a friend](https://twitter.com/stimms), I created an XSLT transform for this and made a small C# utility that I could use to apply it to each XML file and generate an HTML file. Then I use Google Chrome's built-in headless mode to print the HTML file to a PDF. A sample command on Mac:
+
+`/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --print-to-pdf="./moo.pdf" ./output.html`
+
+The XSLT uses CSS grid to layout the crossword grid which, as its name implies, is almost exactly what it was designed for. I initially tried to use wkhtmltopdf to write the HTML to PDF but it can't handle CSS grid.
+
+The XSLT contains a bit of CSS at the top to remove the default headers that Chrome typically adds to each page. There seems to be a `--print-to-pdf-no-header` flag that is coming out soon (currently in Chrome Canary) but I didn't want to install Canary.
+
+Specify the path to Chrome in your `xword.config` file.
+
+The XSLT transform utility is in C# because that's what I know. That is a bit restrictive because it limits things to XSLT 1.0 which was pretty annoying when it came to URI decoding the clues. At some vague point in the future, it might be nice to try some other language that supports XSLT 2.0 parsing but so far, it works.
+
+The bash script expects the utility to be in a certain location. To publish:
+
+`dotnet publish --configuration=Release -r osx.10.14-x64 --self-contained false -o ../xml2htmlutil/`
 
 ## Email providers
 

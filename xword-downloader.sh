@@ -5,6 +5,8 @@ cookies=$(greadlink -m ./cookies.txt)
 declare -a subscriptions
 . ./xword.config
 
+current_dir="$(pwd)"
+echo "$current_dir"
 mkdir -p "$dest"
 mkdir -p "$dest/archive"
 cd "$dest"
@@ -38,8 +40,14 @@ new_york_times() {
 
 usa_today() {
     echo "USA Today: $lastchecked"
-    usadate = $(gdate -d $lastchecked +'%Y%m%d')
-    
+    usadate=$(gdate -d $lastchecked +'%y%m%d')
+    filename="USAToday$usadate"
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    cd "$current_dir"
+    ./xml2htmlutil/xml2html "http://picayune.uclick.com/comics/usaon/data/usaon$usadate-data.xml" "$filename"
+    eval $("$pathToChrome" --headless --print-to-pdf="$dest/$filename.pdf" ./$filename.html)
+    rm ./$filename.html
+    cd "$dest"
 }
 
 washington_post_sunday() {

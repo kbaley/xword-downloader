@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" 
-    xmlns:my="https://baley.org/my"
+    xmlns:my="http://baley.org/my"
     xmlns:msxsl="urn:schemas-microsoft-com:xslt"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html" version="4.0" encoding="UTF-8" indent="yes"/>
@@ -27,9 +27,27 @@
             @page { margin: 0; }
             body { margin: 1.6cm }
         }
+        @media screen {
+            body { max-width: 710px; }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+        }
         .page {
             display: grid;
             grid-template-columns: 67% 33%;
+        }
+        .puzzle-header {
+            text-align: center;
+            margin: 15px;
+        }
+        .puzzle-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .puzzle-provider {
+            font-size: 27px;
+            font-weight: 600;
         }
         .grid {
             grid-column: 1;
@@ -57,8 +75,8 @@
         .clues {
             border: 2px solid black;
             margin: 5px;
-            padding: 5px;
-            font-size: 10px; 
+            padding: 12px;
+            font-size: 11px; 
         }
         .across {
             grid-column: 1;
@@ -74,19 +92,26 @@
         .header {
             grid-column: 1 / span 2;
         }
+        .clue-header {
+            margin: 0;
+            font-size: 16px;
+        }
+        .clue-number {
+            font-weight: 600;
+            margin: 0 5px 0 0;
+        }
             </style>
         </head>
 
         <body>
             <div class="page">
                 <div class="across clues">
-                    <div class="header">ACROSS
-                    </div>
+                    <div class="header clue-header">ACROSS</div>
                     <xsl:variable name="mid" select="round(count(across/*) div 2)" />
                     <div class="content">
                         <xsl:for-each select="across/*[position() &lt;= $mid]">
                             <div class="clue">
-                                <xsl:value-of select="./@cn" />) <xsl:call-template name="multiReplace">
+                                <span class="clue-number"><xsl:value-of select="./@cn" />)</span> <xsl:call-template name="multiReplace">
                                             <xsl:with-param name="pText" select="./@c" />
                                         </xsl:call-template>
                             </div>
@@ -95,7 +120,7 @@
                     <div class="content">
                         <xsl:for-each select="across/*[position() &gt; $mid]">
                             <div class="clue">
-                                <xsl:value-of select="./@cn" />) <xsl:call-template name="multiReplace">
+                                <span class="clue-number"><xsl:value-of select="./@cn" />)</span> <xsl:call-template name="multiReplace">
                                             <xsl:with-param name="pText" select="./@c" />
                                         </xsl:call-template>
                             </div>
@@ -117,13 +142,16 @@
                         </div>
                     </div>
                     <div class="clues">
+                        <div class="clue-header">DOWN</div>
+                        <div class="content">
                         <xsl:for-each select="down/*">
                             <div class="clue">
-                                <xsl:value-of select="./@cn" />) <xsl:call-template name="multiReplace">
+                                <span class="clue-number"><xsl:value-of select="./@cn" />)</span> <xsl:call-template name="multiReplace">
                                             <xsl:with-param name="pText" select="./@c" />
                                         </xsl:call-template>
                             </div>
                         </xsl:for-each>
+                        </div>
                     </div>
                 </div>
                 <div class="grid">

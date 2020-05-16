@@ -3,3 +3,4 @@
 dest=/path/to/download/folder
 # Delete any you don't want to download 
 subscriptions=("newsday" "nyt" "wapoSunday", "usaToday")
+pathToChrome=/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
