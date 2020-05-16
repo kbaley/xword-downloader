@@ -38,13 +38,16 @@ new_york_times() {
     fi
 }
 
-usa_today() {
-    echo "USA Today: $lastchecked"
+uclick() {
+    # $1: Name of provider
+    # $2: Short name (used for filename)
+    # $3: uclick code for URL
+    echo "$1: $lastchecked"
     usadate=$(gdate -d $lastchecked +'%y%m%d')
-    filename="USAToday$usadate"
+    filename="$2$usadate"
     DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
     cd "$current_dir"
-    ./xml2htmlutil/xml2html "http://picayune.uclick.com/comics/usaon/data/usaon$usadate-data.xml" "$filename"
+    ./xml2htmlutil/xml2html "http://picayune.uclick.com/comics/$3/data/$3$usadate-data.xml" "$filename"
     eval $("$pathToChrome" --headless --print-to-pdf="$dest/$filename.pdf" ./$filename.html)
     rm ./$filename.html
     cd "$dest"
@@ -101,17 +104,21 @@ retrieve_crosswords() {
             washington_post_sunday
         fi
         if [[ ${subscriptions[@]}  =~ "newsday" ]]; then
-            newsday
+            newsday  # Doesn't work anymore
+            # uclick "Newsday" "Newsday" "crnet"
         fi
         if [[ ${subscriptions[@]} =~ "usaToday" ]]; then
-            usa_today
+            uclick "USA Today" "USAToday" "usaon"
+        fi
+        if [[ ${subscriptions[@]} =~ "universal" ]]; then
+            uclick "Universal" "Universal" "fcx"
         fi
         lastchecked=$(gdate -d "$lastchecked tomorrow" +$dateformat)
     done
 
     lastchecked=$(date +$dateformat)
-    # rm $FILE
-    # echo $lastchecked >> $FILE
+    rm $FILE
+    echo $lastchecked >> $FILE
 }
 
 usage() {

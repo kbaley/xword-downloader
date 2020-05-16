@@ -18,6 +18,8 @@ This uses the built-in MacOS PDF-merging python script.
 
 ## Uclick providers
 
+**NOTE**: This works only for regular-sized (i.e. 15x15) daily puzzles. The larger Sunday ones (e.g. from Newsday) have some formatting issues.
+
 Puzzle providers that use uclick.com as their provider are a bit tricky. The puzzles are provided in what appears to be a custom XML format ([sample USA Today puzzle](http://picayune.uclick.com/comics/usaon/data/usaon200510-data.xml)). Based on an idea from [a friend](https://twitter.com/stimms), I created an XSLT transform for this and made a small C# utility that I could use to apply it to each XML file and generate an HTML file. Then I use Google Chrome's built-in headless mode to print the HTML file to a PDF. A sample command on Mac:
 
 `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --print-to-pdf="./moo.pdf" ./output.html`
@@ -27,6 +29,8 @@ The XSLT uses CSS grid to layout the crossword grid which, as its name implies, 
 The XSLT contains a bit of CSS at the top to remove the default headers that Chrome typically adds to each page. There seems to be a `--print-to-pdf-no-header` flag that is coming out soon (currently in Chrome Canary) but I didn't want to install Canary.
 
 Specify the path to Chrome in your `xword.config` file.
+
+When converting to a PDF, I typically see an error saying "Operation not permitted". I've been ignoring it on the grounds that it still works.
 
 The XSLT transform utility is in C# because that's what I know. That is a bit restrictive because it limits things to XSLT 1.0 which was pretty annoying when it came to URI decoding the clues. At some vague point in the future, it might be nice to try some other language that supports XSLT 2.0 parsing but so far, it works.
 
