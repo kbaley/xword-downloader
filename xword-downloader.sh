@@ -69,8 +69,8 @@ newsday() {
 }
 
 do_merge() {
-    destination_file=$dest/Crosswords.pd_
-    source_files=$dest/*.pdf
+    destination_file=./Crosswords.pd_
+    source_files=./*.pdf
     pdf_count=$(ls -l $source_files 2>/dev/null| wc -l)
     destination_count=$(ls -l $dest/Crosswords.pdf 2>/dev/null| wc -l)
     if [ $destination_count -eq 1 ]; then
@@ -82,8 +82,8 @@ do_merge() {
     fi
     echo "Merging files into a single PDF"
     $(/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py -o $destination_file $source_files)
-    mv $source_files $dest/archive/
-    mv $destination_file $dest/Crosswords.pdf
+    mv $source_files ./archive/
+    mv $destination_file ./Crosswords.pdf
 }
 
 retrieve_crosswords() {
