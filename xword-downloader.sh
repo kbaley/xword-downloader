@@ -6,7 +6,7 @@ declare -a subscriptions
 . ./xword.config
 
 current_dir="$(pwd)"
-echo "$current_dir"
+echo "Current directory: $current_dir"
 mkdir -p "$dest"
 mkdir -p "$dest/archive"
 cd "$dest"
@@ -68,6 +68,19 @@ newsday() {
     curl -OJ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d "id=Creators_WEB_${newsdaydate}&set=creatorsweb&theme=newsday&locale=en-US&print=1&checkPDF=true" "https://cdn2.amuselabs.com/pmm/crossword-pdf" 
 }
 
+wsjcontest() {
+    # Format: https://s.wsj.net/public/resources/documents/XWDMMDDYYYYY.pdf
+    # Note the extra Y at the end which is a constant
+    # e.g. XWD04302021Y.pdf
+    puzzle_day=$(gdate -d $lastchecked +"%u")
+    # WSJ contest puzzles are on Friday
+    if [ $puzzle_day == 5 ]; then
+        echo "Wall Street Journal Crossword Contest: $lastchecked"
+        wsjdate=$(gdate -d $lastchecked +'%m%d%Y')
+        curl -OJ "https://s.wsj.net/public/resources/documents/XWD${wsjdate}Y.pdf"
+    fi
+}
+
 do_merge() {
     destination_file=./Crosswords.pd_
     source_files=./*.pdf
@@ -113,6 +126,9 @@ retrieve_crosswords() {
         if [[ ${subscriptions[@]} =~ "universal" ]]; then
             uclick "Universal" "Universal" "fcx"
         fi
+        if [[ ${subscriptions[@]} =~ "wsjcontest" ]]; then
+            wsjcontest
+        fi
         lastchecked=$(gdate -d "$lastchecked tomorrow" +$dateformat)
     done
 
@@ -127,15 +143,24 @@ usage() {
     echo "  -m|--merge      Merge and archive PDFs in destination folder into a single PDF"
 }
 
-if [ "$1" = "" ]; then
+if [[ $1 == "" ]]
+then
     retrieve_crosswords
 fi
+
+set_date() {
+    lastchecked=$(gdate -d "$1 tomorrow" +$dateformat)
+    retrieve_crosswords
+}
 
 while [ "$1" != "" ]; do
     case $1 in
         -m | --merge )      do_merge
                             ;;
-        -h | --help )      usage
+        -h | --help )       usage
+                            ;;
+        -d | --date )       set_date "$2"
+                            shift
                             ;;
         * )                 usage
                             ;;
