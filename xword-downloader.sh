@@ -74,6 +74,8 @@ wsjcontest() {
     # e.g. XWD04302021Y.pdf
     # UPDATE July 2021: seems their format isn't as standard as I thought. There are semi-random
     # characters at the end of the filename now.
+    # Promising lead: http://herbach.dnsalias.com/wsj/wsfYYMMDD.puz
+    # Would need to convert from puz to PDF. See https://github.com/njyoon/njyoon.github.io
     puzzle_day=$(gdate -d $lastchecked +"%u")
     # WSJ contest puzzles are on Friday
     if [ $puzzle_day == 5 ]; then
