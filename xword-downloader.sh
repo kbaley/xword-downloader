@@ -72,12 +72,14 @@ wsjcontest() {
     # Format: https://s.wsj.net/public/resources/documents/XWDMMDDYYYYY.pdf
     # Note the extra Y at the end which is a constant
     # e.g. XWD04302021Y.pdf
+    # UPDATE July 2021: seems their format isn't as standard as I thought. There are semi-random
+    # characters at the end of the filename now.
     puzzle_day=$(gdate -d $lastchecked +"%u")
     # WSJ contest puzzles are on Friday
     if [ $puzzle_day == 5 ]; then
-        echo "Wall Street Journal Crossword Contest: $lastchecked"
-        wsjdate=$(gdate -d $lastchecked +'%m%d%Y')
-        curl -OJ "https://s.wsj.net/public/resources/documents/XWD${wsjdate}Y.pdf"
+#        echo "Wall Street Journal Crossword Contest: $lastchecked"
+#        wsjdate=$(gdate -d $lastchecked +'%m%d%Y')
+#        curl -OJ "https://s.wsj.net/public/resources/documents/XWD${wsjdate}Y.pdf"
     fi
 }
 
