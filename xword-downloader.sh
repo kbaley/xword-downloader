@@ -78,11 +78,11 @@ wsjcontest() {
     # Would need to convert from puz to PDF. See https://github.com/njyoon/njyoon.github.io
     puzzle_day=$(gdate -d $lastchecked +"%u")
     # WSJ contest puzzles are on Friday
-    if [ $puzzle_day == 5 ]; then
+#    if [ $puzzle_day == 5 ]; then
 #        echo "Wall Street Journal Crossword Contest: $lastchecked"
 #        wsjdate=$(gdate -d $lastchecked +'%m%d%Y')
 #        curl -OJ "https://s.wsj.net/public/resources/documents/XWD${wsjdate}Y.pdf"
-    fi
+#    fi
 }
 
 do_merge() {
