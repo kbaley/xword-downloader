@@ -76,13 +76,13 @@ wsjcontest() {
     # characters at the end of the filename now.
     # Promising lead: http://herbach.dnsalias.com/wsj/wsfYYMMDD.puz
     # Would need to convert from puz to PDF. See https://github.com/njyoon/njyoon.github.io
-    puzzle_day=$(gdate -d $lastchecked +"%u")
-    # WSJ contest puzzles are on Friday
-#    if [ $puzzle_day == 5 ]; then
-#        echo "Wall Street Journal Crossword Contest: $lastchecked"
-#        wsjdate=$(gdate -d $lastchecked +'%m%d%Y')
-#        curl -OJ "https://s.wsj.net/public/resources/documents/XWD${wsjdate}Y.pdf"
-#    fi
+    # UPDATE 2 July 21: I created a utility that uses Selenium to extract the puzzles instead
+    # Not bullet proof (it won't work if you need to download more than is available on the first page)
+    # but it should work
+    cd "$current_dir"
+    ./WSJDownloadUtil/WSJDownloader "$dest" "$lastchecked"
+    cd "$dest"
+
 }
 
 do_merge() {
@@ -115,6 +115,13 @@ retrieve_crosswords() {
             new_york_times
         fi
     fi
+
+    # wsjcontest only needs to happen once; the utility downloads whatever is required
+    # but we need to do this before we start changing the lastcheckeddate variable around
+    if [[ ${subscriptions[@]} =~ "wsjcontest" ]]; then
+        wsjcontest
+    fi
+
     while [ $lastchecked != $tomorrow ]; do
         echo "Retrieving puzzles for $lastchecked"
         if [[ ${subscriptions[@]}  =~ "wapoSunday" ]]; then
@@ -129,9 +136,6 @@ retrieve_crosswords() {
         fi
         if [[ ${subscriptions[@]} =~ "universal" ]]; then
             uclick "Universal" "Universal" "fcx"
-        fi
-        if [[ ${subscriptions[@]} =~ "wsjcontest" ]]; then
-            wsjcontest
         fi
         lastchecked=$(gdate -d "$lastchecked tomorrow" +$dateformat)
     done

@@ -62,6 +62,14 @@ In Zapier, this uses the "New Email Parsed in Mailparser" and "Upload File in Go
 
 This entire setup requires 3 zaps in Zapier and an account with Mailparser. The free Mailparser account allows 30 emails per month which is more than enough for Matt Gaffney (typically 4 or 5 plus an occasional informational email that slips through the filter).
 
+## Wall Street Journal Crossword Contest
+
+This is a bit of a hack. The puzzles don't seem to have deterministic URLs; there is always some sort of random string of characters involved, possibly to protect against the likes of me.
+
+The WSJDownloader utility uses [Selenium WebDriver](https://www.selenium.dev/) to essentially scrape the WSJ website and download the necessary puzzles. It's not the prettiest solution and automated UI testing still seems to require the occasional `Thread.Sleep` but we'll see how it goes.
+
+The utility relies on Firefox because that's what the first sample code I saw used and I already had it installed anyway. I've included a compiled version of the code in the WSJDownloadUtil folder but the code is available as well. Make sure the Firefox driver (i.e. `geckodriver`) is in your path somewhere. A compiled version is also in the WSJDownload folder if you want to just copy it to the required bin folder, which is what I did when I was hacking this together.
+
 ## The eventual workflow
 
 - Run the bash script to get the most recent crosswords
