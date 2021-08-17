@@ -149,29 +149,41 @@ usage() {
     echo "usage: xword-downloader [-m|--merge]"
     echo "  <no arguments>  retrieve all subscriptions"
     echo "  -m|--merge      Merge and archive PDFs in destination folder into a single PDF"
+    echo "  -d|--date       Override the last checked date"
+    echo "  -s|--sources    Override the sources/subscriptions from the config file"
 }
-
-if [[ $1 == "" ]]
-then
-    retrieve_crosswords
-fi
 
 set_date() {
     lastchecked=$(gdate -d "$1 tomorrow" +$dateformat)
-    retrieve_crosswords
 }
+
+set_sources() {
+    subscriptions=($1)
+}
+
+merge_done=false
 
 while [ "$1" != "" ]; do
     case $1 in
         -m | --merge )      do_merge
+                            merge_done=true
                             ;;
         -h | --help )       usage
                             ;;
         -d | --date )       set_date "$2"
                             shift
                             ;;
+        -s | --sources )    set_sources "$2"
+                            shift
+                            ;;
         * )                 usage
+                            merge_done=true
                             ;;
     esac
     shift
 done
+
+if [[ $merge_done == false ]]
+then
+    retrieve_crosswords
+fi
