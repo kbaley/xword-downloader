@@ -5,6 +5,8 @@ With credit to https://www.reddit.com/user/oxguy3/ for the [starting point](http
 
 Requires installation of jq and coreutils (for the gdate functions on Mac). Also requires your NYT cookies in a cookies.txt file in the same folder. Or comment out the NYT section of the main script. The important cookie is the one named: `NYT-S`
 
+Requires GhostScript (`brew install gs`) to merge all PDFs into a single one.
+
 Create a copy of xword.config.src called xword.config, updating the values as appropriate.
 
 By default, the script will download all crosswords from New York Times, Washington Post Sunday, and Newsday since the last download.
