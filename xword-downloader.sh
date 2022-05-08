@@ -79,6 +79,8 @@ wsjcontest() {
     # UPDATE 2 July 21: I created a utility that uses Selenium to extract the puzzles instead
     # Not bullet proof (it won't work if you need to download more than is available on the first page)
     # but it should work
+    #
+    # Narrator: It often doesn't
     cd "$current_dir"
     ./WSJDownloadUtil/WSJDownloader "$dest" "$lastchecked"
     cd "$dest"
