@@ -86,8 +86,12 @@ wsjcontest() {
 }
 
 do_merge() {
-    destination_file=$dest/Crosswords.pd_
-    source_files=$dest/*.pdf
+    # The following works with Google Drive on Mac but not with OneDrive
+    destination_file=./Crosswords.pd_
+    source_files=./*.pdf
+    # The following works with OneDrive on Mac but not with Google Drive
+    # destination_file=$dest/Crosswords.pd_
+    # source_files=$dest/*.pdf
     pdf_count=$(ls -l $source_files 2>/dev/null| wc -l)
     destination_count=$(ls -l $dest/Crosswords.pdf 2>/dev/null| wc -l)
     if [ $destination_count -eq 1 ]; then
