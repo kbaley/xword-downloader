@@ -58,7 +58,7 @@ These were done with Zapier's "New Attachment in Gmail" event. Each one triggers
 
 Matt Gaffney's crosswords need a bit more work. His are sent from Patreon which doesn't actually attach the crosswords but instead sends a link to them. I couldn't find a way to parse the link with Zapier's built-in email parser so I created an account with mailparser.io, which also integrates with Zapier. It took a bit of fiddling to get the parsing rule right.
 
-Using Mailparser also means the parsing isn't done automatically when the email comes in. Instead, I need to forward the email to a special mailparser.io email address to trigger the rule. This was easy enough to automate with a Gmail filter to auto-forward any mail meeting certain criteria, then auto-archiving the email in Gmail.
+Using Mailparser also means the parsing isn't done automatically when the email comes in. Instead, I need to forward the email to a special mailparser.io email address to trigger the rule. This was easy enough to automate with a Gmail filter to auto-forward any mail meeting certain criteria, then auto-archiving the email in Gmail. You have to be a little creative with the Gmail filter because Matt often postpones crosswords and will send an email letting you know. Can't blame him, he's got a young daughter who is (understandably) more important than making sure I have a puzzle to work on every Friday. Either way, the Gmail filter should be set up so that it includes only the ones from Matt with a link to the puzzle, otherwise the zap will fail, which, to be fair, isn't exactly the end of the world.
 
 In Zapier, this uses the "New Email Parsed in Mailparser" and "Upload File in Google Drive" events. No filter is needed because it's done in Mailparser.
 
@@ -68,9 +68,11 @@ This entire setup requires 3 zaps in Zapier and an account with Mailparser. The 
 
 This is a bit of a hack. The puzzles don't seem to have deterministic URLs; there is always some sort of random string of characters involved, possibly to protect against the likes of me.
 
-The WSJDownloader utility uses [Selenium WebDriver](https://www.selenium.dev/) to essentially scrape the WSJ website and download the necessary puzzles. It's not the prettiest solution and automated UI testing still seems to require the occasional `Thread.Sleep` but we'll see how it goes.
+The WSJDownloader utility uses [Playwright](https://playwright.dev/dotnet/) to essentially scrape the WSJ website and download the necessary puzzles. It's not the prettiest solution but we'll see how it goes.
 
-The utility relies on Firefox because that's what the first sample code I saw used and I already had it installed anyway. I've included a compiled version of the code in the WSJDownloadUtil folder but the code is available as well. Make sure the Firefox driver (i.e. `geckodriver`) is in your path somewhere. A compiled version is also in the WSJDownload folder if you want to just copy it to the required bin folder, which is what I did when I was hacking this together.
+The batch file executes the utility in the WSJDownloadUtil folder so a compiled version of the code must exist there. The command to do this is (from the WSJDownloader folder):
+
+`dotnet publish --configuration=Release -o ../WSJDownloadUtil`
 
 ## The eventual workflow
 

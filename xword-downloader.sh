@@ -76,7 +76,7 @@ wsjcontest() {
     # characters at the end of the filename now.
     # Promising lead: http://herbach.dnsalias.com/wsj/wsfYYMMDD.puz
     # Would need to convert from puz to PDF. See https://github.com/njyoon/njyoon.github.io
-    # UPDATE 2 July 21: I created a utility that uses Selenium to extract the puzzles instead
+    # UPDATE 2 July 21: I created a utility that uses Playwright to extract the puzzles instead
     # Not bullet proof (it won't work if you need to download more than is available on the first page)
     # but it should work
     #
