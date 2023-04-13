@@ -29,13 +29,13 @@ namespace WSJDownloader
             startDate = startDate.AddDays(((int)DayOfWeek.Friday - (int)startDate.DayOfWeek + 7) % 7);
             while (startDate <= DateTime.Today) {
                 Console.WriteLine($"Extracting puzzle for {startDate.ToString("MMMM d, yyyy")}");
-                await ExtractPuzzle(page, startDate, context);
+                await ExtractPuzzle(page, startDate, context, downloadDir);
                 startDate = startDate.AddDays(7);
             }
             Console.WriteLine("Done WSJ puzzle extraction");
         }
         
-        private static async Task ExtractPuzzle(IPage page, DateTime date, IBrowserContext context) {
+        private static async Task ExtractPuzzle(IPage page, DateTime date, IBrowserContext context, string downloadDir) {
             var dateText = $"Friday Crossword, {date:MMMM d}";
             await page.Locator($"a:has-text('{dateText}')").ClickAsync();
             await page.WaitForSelectorAsync("a:has-text('Download PDF')");
@@ -43,7 +43,8 @@ namespace WSJDownloader
             await page.GetByText("Download PDF.").ClickAsync();
             await page.Context.WaitForPageAsync();
             var download = await downloadTask;
-            await download.SaveAsAsync($"WSJ-{date:yyyy-MM-dd}.pdf");
+            var path = System.IO.Path.Combine(downloadDir, $"WSJ-{date:yyyy-MM-dd}.pdf");
+            await download.SaveAsAsync(path);
             await page.GoBackAsync();
         }
     }

@@ -82,6 +82,7 @@ wsjcontest() {
     #
     # Narrator: It often doesn't
     cd "$current_dir"
+    echo "Wall Street Journal Contest: $dest $lastchecked"
     ./WSJDownloadUtil/WSJDownloader "$dest" "$lastchecked"
     cd "$dest"
 
