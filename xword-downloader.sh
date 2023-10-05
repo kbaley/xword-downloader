@@ -29,11 +29,11 @@ new_york_times() {
     numdays=$(( ($(gdate +%s) - $(gdate -d $lastchecked +%s) )/(60*60*24)+1))
     if [[ $numdays -gt 0 ]]; then
         echo "Retrieving $numdays puzzles from New York Times"
-        puzzids=`curl -b "$cookies" "https://nyt-games-prd.appspot.com/svc/crosswords/v3/36569100/puzzles.json?publish_type=daily&sort_order=asc&sort_by=print_date&limit=$numdays" | jq '.results[].puzzle_id'`
+        puzzids=`curl -b "$cookies" "https://www.nytimes.com/svc/crosswords/v3/36569100/puzzles.json?publish_type=daily&sort_order=asc&sort_by=print_date&limit=$numdays" | jq '.results[].puzzle_id'`
         for puzzid in $puzzids
         do
             echo "https://www.nytimes.com/svc/crosswords/v2/puzzle/$puzzid.pdf"
-            curl -b "$cookies" -OJ "https://www.nytimes.com/svc/crosswords/v2/puzzle/$puzzid.pdf"
+            curl -b "$cookies" -OJ "https://www.nytimes.com/svc/crosswords/v2/puzzle/$puzzid.pdf?southpaw=true"
         done
     fi
 }
