@@ -1,4 +1,7 @@
 using System.Text.Json;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Files.Shares;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -57,9 +60,18 @@ namespace XwordDownloader
 
             var contentDisposition = response.Content.Headers.ContentDisposition;
             var fileName = contentDisposition?.FileName ?? $"{puzzleId}.pdf";
+            var bytes = await response.Content.ReadAsByteArrayAsync();
 
-            await using var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            await response.Content.CopyToAsync(fileStream);
+            var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
+            var shareClient = new ShareClient(connectionString, "xwords");
+            await shareClient.CreateIfNotExistsAsync();
+
+            var directoryClient = shareClient.GetRootDirectoryClient();
+            var fileClient = directoryClient.GetFileClient(fileName);
+
+            using var stream = new MemoryStream(bytes);
+            await fileClient.CreateAsync(stream.Length);
+            await fileClient.UploadRangeAsync(new HttpRange(0, stream.Length), stream);
         }
 
 
