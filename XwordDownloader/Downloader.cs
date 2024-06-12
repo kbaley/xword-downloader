@@ -62,8 +62,8 @@ namespace XwordDownloader
             var fileName = contentDisposition?.FileName ?? $"{puzzleId}.pdf";
             var bytes = await response.Content.ReadAsByteArrayAsync();
 
-            var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
-            var shareClient = new ShareClient(connectionString, "xwords");
+            var connectionString = Environment.GetEnvironmentVariable("PuzzleStorageConnectionString") ?? throw new Exception("PuzzleStorageConnectionString not found");
+            var shareClient = new ShareClient(connectionString, "puzzles");
             await shareClient.CreateIfNotExistsAsync();
 
             var directoryClient = shareClient.GetRootDirectoryClient();
