@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Azure;
-using Azure.Storage.Blobs;
 using Azure.Storage.Files.Shares;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -20,7 +19,7 @@ namespace XwordDownloader
         public async Task Run([TimerTrigger("0 8 * * *")] TimerInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            // await DownloadNytPuzzle();
+            await DownloadNytPuzzle();
             await DownloadWapoSundayPuzzle();
 
             if (myTimer.ScheduleStatus is not null)
@@ -31,23 +30,25 @@ namespace XwordDownloader
 
         private async Task DownloadWapoSundayPuzzle()
         {
+            if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday)
+            {
+                return;
+            }
             const string url = "https://cdn1.amuselabs.com/wapo/crossword-pdf";
             var parms = new Dictionary<string, string>();
-            parms.Add("id", "ebirnholz_240609");
+            var date = DateTime.Now.ToString("yyMMdd");
+            parms.Add("id", $"ebirnholz_{date}");
             parms.Add("set", "wapo-eb");
             parms.Add("theme", "wapo");
             parms.Add("locale", "en-US");
             parms.Add("print", "1");
             parms.Add("checkPDF", "true");
             using var httpClient = new HttpClient();
-            using var request = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = new FormUrlEncodedContent(parms)
-            };
+            using var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = new FormUrlEncodedContent(parms);
             using var response = await httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             
-            await DownloadLocalPdf("ebirnholz_240609.pdf", response);
+            await DownloadPdf($"ebirnholz_{date}.pdf", response);
         }
 
         private async Task DownloadNytPuzzle()
@@ -71,20 +72,20 @@ namespace XwordDownloader
                 var puzzleUrl = $"https://www.nytimes.com/svc/crosswords/v2/puzzle/{puzzleId}.pdf?southpaw=true";
                 Console.WriteLine(puzzleUrl);
 
-                await DownloadPdf(httpClient, cookies, puzzleUrl, puzzleId);
+                await GetNytPuzzle(httpClient, cookies, puzzleUrl, puzzleId);
             }
         }
 
-        static async Task DownloadPdf(HttpClient httpClient, string cookies, string url, int puzzleId)
+        static async Task GetNytPuzzle(HttpClient httpClient, string cookies, string url, int puzzleId)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("Cookie", cookies);
 
             var response = await httpClient.SendAsync(request);
-            await DownloadLocalPdf($"{puzzleId}.pdf", response);
+            await DownloadPdf($"{puzzleId}.pdf", response);
         }
 
-        private static async Task DownloadLocalPdf(string filename, HttpResponseMessage response)
+        private static async Task DownloadPdf(string filename, HttpResponseMessage response)
         {
             response.EnsureSuccessStatusCode();
 
