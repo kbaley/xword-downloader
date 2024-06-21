@@ -19,34 +19,59 @@ namespace XwordDownloader
         [Function("Downloader")]
         public async Task Run([TimerTrigger("0 8 * * *")] TimerInfo myTimer)
         {
-            var nytsCookie = Environment.GetEnvironmentVariable("NYTS_COOKIE") ?? "";
-            var cookies = "NYT-S=" + nytsCookie;
-            const int numdays = 1;
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            // await DownloadNytPuzzle();
+            await DownloadWapoSundayPuzzle();
 
-            using (var httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.Add("Cookie", cookies);
-
-                var requestUrl = $"https://www.nytimes.com/svc/crosswords/v3/36569100/puzzles.json?publish_type=daily&sort_order=asc&sort_by=print_date&limit={numdays}";
-                var response = await httpClient.GetAsync(requestUrl);
-                response.EnsureSuccessStatusCode();
-
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var puzzleIds = ParsePuzzleIds(jsonResponse);
-
-                foreach (var puzzleId in puzzleIds)
-                {
-                    var puzzleUrl = $"https://www.nytimes.com/svc/crosswords/v2/puzzle/{puzzleId}.pdf?southpaw=true";
-                    Console.WriteLine(puzzleUrl);
-
-                    await DownloadPdf(httpClient, cookies, puzzleUrl, puzzleId);
-                }
-            }
-            
             if (myTimer.ScheduleStatus is not null)
             {
                 _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+            }
+        }
+
+        private async Task DownloadWapoSundayPuzzle()
+        {
+            const string url = "https://cdn1.amuselabs.com/wapo/crossword-pdf";
+            var parms = new Dictionary<string, string>();
+            parms.Add("id", "ebirnholz_240609");
+            parms.Add("set", "wapo-eb");
+            parms.Add("theme", "wapo");
+            parms.Add("locale", "en-US");
+            parms.Add("print", "1");
+            parms.Add("checkPDF", "true");
+            using var httpClient = new HttpClient();
+            using var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new FormUrlEncodedContent(parms)
+            };
+            using var response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            
+            await DownloadLocalPdf("ebirnholz_240609.pdf", response);
+        }
+
+        private async Task DownloadNytPuzzle()
+        {
+            var nytsCookie = Environment.GetEnvironmentVariable("NYTS_COOKIE") ?? "";
+            var cookies = "NYT-S=" + nytsCookie;
+            const int numdays = 1;
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Cookie", cookies);
+
+            var requestUrl = $"https://www.nytimes.com/svc/crosswords/v3/36569100/puzzles.json?publish_type=daily&sort_order=asc&sort_by=print_date&limit={numdays}";
+            var response = await httpClient.GetAsync(requestUrl);
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            var puzzleIds = ParsePuzzleIds(jsonResponse);
+
+            foreach (var puzzleId in puzzleIds)
+            {
+                var puzzleUrl = $"https://www.nytimes.com/svc/crosswords/v2/puzzle/{puzzleId}.pdf?southpaw=true";
+                Console.WriteLine(puzzleUrl);
+
+                await DownloadPdf(httpClient, cookies, puzzleUrl, puzzleId);
             }
         }
 
@@ -56,10 +81,15 @@ namespace XwordDownloader
             request.Headers.Add("Cookie", cookies);
 
             var response = await httpClient.SendAsync(request);
+            await DownloadLocalPdf($"{puzzleId}.pdf", response);
+        }
+
+        private static async Task DownloadLocalPdf(string filename, HttpResponseMessage response)
+        {
             response.EnsureSuccessStatusCode();
 
             var contentDisposition = response.Content.Headers.ContentDisposition;
-            var fileName = contentDisposition?.FileName ?? $"{puzzleId}.pdf";
+            var fileName = contentDisposition?.FileName ?? filename;
             var bytes = await response.Content.ReadAsByteArrayAsync();
 
             var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage") ?? throw new Exception("AzureWebJobsStorage not found");
