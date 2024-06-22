@@ -1,5 +1,30 @@
 # xword-downloader
-Script to download PDF versions of various online crossword puzzle providers
+
+There are two major components to this:
+
+- A bash script (and associated utilities)
+- An Azure Functions app
+
+Both do the same thing in that they download Crossword puzzles from various providers. The bash script is more complete since it covers more providers though as of June 2024, I haven't tested it with Uclick and Newsday in a couple of years. The Azure Functions app was added so that this can run on a timer automatically. As of June 2024, that's what I'm using so the bash script will likely fall into disrepair though I haven't had to update it much, except to deal with providers changing things around.
+
+## Azure Functions app
+
+This is newer than the bash file and has the advantage that it runs on a timer rather than on demand. It could easily be modified to use an HTTP trigger to behave more like the Bash script. That would require keeping track of the last time it was run.
+
+Current disadvantage of the app is that it dumps everything to Azure Storage which requires the extra step of me downloading the files or setting up a network drive. The bash script dumps files to a local folder that's hooked up to Google Drive so next step is to configure the Azure Functions app to save the files to Google Drive. For now, dumping to Azure Storage is pretty simple.
+
+The Azure Functions app also doesn't have the merge capability that the bash script does where it can merge all the PDFs into a single file. So you can keep using the bash script for that. Or MacOS's built-in capability of right-clicking a bunch of PDFs | Quick Actions | Create PDF. An alternative could be to look for a specific file in the destination and append the new downloads to it. Then I'd delete the file each time I printed it and start again.
+
+The Azure Functions app requires a couple of environment variables:
+
+- NYTS_COOKIE: The value of the nyt-s cookie from your browser indicating you have an active subscription. Login to the NYT website and use your browser tools to find this. You'll obviously need to update this value when your subscription renews.
+- AzureWebJobsStorage: This usually gets created for you when you create an Azure Functions app. It's where the puzzles get stored. 
+
+### Working locally
+
+Working with Azure Functions locally isn't that bad but since this runs on a timer, it's a bit of a pain having to trigger it manually for debugging purposes. So there's a console option that runs in DEBUG mode instead of using the Azure Functions host. This also saves the puzzle PDFs to your Downloads folder rather than Azure Storage.
+
+## Bash script
 
 With credit to https://www.reddit.com/user/oxguy3/ for the [starting point](https://www.reddit.com/r/crossword/comments/dqtnca/my_automatic_nyt_crossword_downloading_script/)
 
@@ -66,6 +91,8 @@ This entire setup requires 3 zaps in Zapier and an account with Mailparser. The 
 
 ## Wall Street Journal Crossword Contest
 
+> **June 2024 update**: This section doesn't really apply anymore because the URLs are deterministic now (based on the date). The bash file still uses the custom utility but the Azure Function shows how this can be done MUCH more easily. I'm leaving the text for historic purposes.
+
 This is a bit of a hack. The puzzles don't seem to have deterministic URLs; there is always some sort of random string of characters involved, possibly to protect against the likes of me.
 
 The WSJDownloader utility uses [Playwright](https://playwright.dev/dotnet/) to essentially scrape the WSJ website and download the necessary puzzles. It's not the prettiest solution but we'll see how it goes.
@@ -74,7 +101,7 @@ The batch file executes the utility in the WSJDownloadUtil folder so a compiled 
 
 `dotnet publish --configuration=Release -o ../WSJDownloadUtil`
 
-## The eventual workflow
+## The workflow
 
 - Run the bash script to get the most recent crosswords
 - Run the bash script with `--merge` to merge them (along with any saved from email providers) into a single PDF file
@@ -92,6 +119,3 @@ I want to tackle some other providers that are a bit more difficult to automate,
   - There's a newer one that is probably better. I'm used to the classic one and still prefer it
 - [Shortyz on Android](https://play.google.com/store/apps/details?id=com.totsp.crossword.shortyz&hl=en)
   - Back when I had an Android device, this was a great app. I can only assume it still is. Either way, its source code is [open source](https://github.com/kebernet/shortyz)
-    
-    https://github.com/kebernet/shortyz)
-  - Back 
