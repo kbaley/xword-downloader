@@ -15,10 +15,30 @@ Current disadvantage of the app is that it dumps everything to Azure Storage whi
 
 The Azure Functions app also doesn't have the merge capability that the bash script does where it can merge all the PDFs into a single file. So you can keep using the bash script for that. Or MacOS's built-in capability of right-clicking a bunch of PDFs | Quick Actions | Create PDF. An alternative could be to look for a specific file in the destination and append the new downloads to it. Then I'd delete the file each time I printed it and start again.
 
-The Azure Functions app requires a couple of environment variables:
+The Azure Functions app requires a few environment variables:
 
-- NYTS_COOKIE: The value of the nyt-s cookie from your browser indicating you have an active subscription. Login to the NYT website and use your browser tools to find this. You'll obviously need to update this value when your subscription renews.
 - AzureWebJobsStorage: This usually gets created for you when you create an Azure Functions app. It's where the puzzles get stored. 
+- NYTS_COOKIE: The value of the nyt-s cookie from your browser indicating you have an active subscription. Login to the NYT website and use your browser tools to find this. You'll obviously need to update this value when your subscription renews.
+- GoogleDriveFolderId: The ID of the folder in Google Drive where the files should be copied. You can get this by navigating to the folder in a browser. Everything after `folder/` in the URL is the ID
+- GoogleApiSecretsFileName: The name of the filename where the Google API service account details are stored. This file should exist in the same Azure Storage account in a file share folder called `secrets`
+
+When working locally, the AzureWebJobsStorage variable isn't necessary. And the NTYS_COOKIE once isn't necessary if you aren't testing New York Times's puzzle.
+
+### Google Drive API
+
+This was a lot of trial and error to figure out and because it involves security, I got bored and/or frustrated very quickly and went with what worked. The major steps include:
+
+- Create a project in your Google Developer Console
+- Enable the Google Drive API (it wasn't enabled by default for me)
+- Create a _service account_ credential
+- Under the new service account, create a _key_. This will download a file to your computer.
+- Upload the file to the Azure Storage account for the Azure Functions app in a File Share folder called `secrets`
+- Create/update two environment variables for the Azure Function:
+  - GoogleApiSecretsFileName: the name of the file (include the .json extension) you downloaded for the key
+  - GoogleDriveFolderId: The ID of the folder where the puzzles should be saved. Navigate to the folder in a browser. The ID is everything after `folder/` in the URL.
+- Share the Google drive folder with the Google API service account (with Editor access). The email address is on the Credentials page in the Google Developer Console and probably ends with .iam.gserviceaccount.com.
+
+The Azure documentation and ChatGPT suggest strongly that OAuth2 credentials should work if you set up Google as an authenticator on the Azure Functions app. I ran into problems with this _I think_ because I couldn't debug locally from a console app so I went with the service account.
 
 ### Working locally
 

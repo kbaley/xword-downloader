@@ -10,6 +10,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.20.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.18.0" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3428" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.21.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="1.2.0" />
@@ -29,5 +30,10 @@
   </ItemGroup>
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="xword-downloader-43205-00692df79213.json" />
+    <None Remove="client_secret_529852509669-tlt1mman6e94cikd529qu9h7gcmmqqrq.apps.googleusercontent.com.json" />
+    <None Remove="xword-downloader-1-9805866200d3.json" />
   </ItemGroup>
 </Project>
