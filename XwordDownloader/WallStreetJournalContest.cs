@@ -15,7 +15,6 @@ public class WallStreetJournalContest
 
         
         var puzzleId = $"XWD{DateTime.Now:MMddyyyy}.pdf";
-        puzzleId = "XWD06212024.pdf";
         var url = $"https://prod-i.a.dj.com/public/resources/documents/{puzzleId}";
         using var httpClient = new HttpClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
