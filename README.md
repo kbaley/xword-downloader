@@ -111,6 +111,8 @@ This entire setup requires 3 zaps in Zapier and an account with Mailparser. The 
 
 ## Wall Street Journal Crossword Contest
 
+> **August 2024 update**: The URLs aren't deterministic anymore and Playwright doesn't work either as there is bot detection on the page. So no automatic downloads for WSJ as of today.
+
 > **June 2024 update**: This section doesn't really apply anymore because the URLs are deterministic now (based on the date). The bash file still uses the custom utility but the Azure Function shows how this can be done MUCH more easily. I'm leaving the text for historic purposes.
 
 This is a bit of a hack. The puzzles don't seem to have deterministic URLs; there is always some sort of random string of characters involved, possibly to protect against the likes of me.
