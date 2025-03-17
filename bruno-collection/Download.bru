@@ -1,0 +1,19 @@
+meta {
+  name: Download
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://{{process.env.AZURE_FUNCTIONS_NAME}}.azurewebsites.net/admin/functions/Downloader
+  body: json
+  auth: none
+}
+
+headers {
+  x-functions-key: {{process.env.X_FUNCTIONS_KEY}}
+}
+
+body:json {
+  {}
+}

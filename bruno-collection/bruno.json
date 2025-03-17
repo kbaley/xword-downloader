@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "xword-downloader",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

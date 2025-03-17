@@ -42,7 +42,9 @@ The Azure documentation and ChatGPT suggest strongly that OAuth2 credentials sho
 
 ### Working locally
 
-Working with Azure Functions locally isn't that bad but since this runs on a timer, it's a bit of a pain having to trigger it manually for debugging purposes. So there's a console option that runs in DEBUG mode instead of using the Azure Functions host. This also saves the puzzle PDFs to your Downloads folder rather than Azure Storage.
+There's a Bruno collection that can be used to trigger your Azure Function manually. It requires an .env file in the `bruno-collection` folder with values for AZURE_FUNCTIONS_NAME and X_FUNCTIONS_KEY
+
+There's also a console option that runs in DEBUG mode instead of using the Azure Functions host. This also saves the puzzle PDFs to your Downloads folder rather than Azure Storage.
 
 ## Bash script
 
