@@ -33,7 +33,13 @@ public class NewYorkTimes
         {
             // Default to left-handed. If you're right-handed, I'll take a pull request but I don't expect
             // anyone else to use this but me so it's hard-coded
-            var puzzleUrl = $"https://www.nytimes.com/svc/crosswords/v2/puzzle/{puzzleId}.pdf?southpaw=true";
+            // For Sunday, print in large print
+            var printOption = "southpaw=true";
+            if (puzzleId.IsSunday)
+            {
+                printOption = "large_print=true";
+            }
+            var puzzleUrl = $"https://www.nytimes.com/svc/crosswords/v2/puzzle/{puzzleId.PuzzleId}.pdf?{printOption}";
             Console.WriteLine(puzzleUrl);
 
             var request = new HttpRequestMessage(HttpMethod.Get, puzzleUrl);
@@ -44,13 +50,16 @@ public class NewYorkTimes
         }
     }
 
-    private static List<int> ParsePuzzleIds(string jsonResponse)
+    private static List<(int PuzzleId, bool IsSunday)> ParsePuzzleIds(string jsonResponse)
     {
-        var puzzleIds = new List<int>();
+        var puzzleIds = new List<(int, bool)>();
         var jsonDoc = JsonDocument.Parse(jsonResponse);
         foreach (var result in jsonDoc.RootElement.GetProperty("results").EnumerateArray())
         {
-            puzzleIds.Add(result.GetProperty("puzzle_id").GetInt32());
+            var puzzleId = result.GetProperty("puzzle_id").GetInt32();
+            var printDate = result.GetProperty("print_date").GetDateTime();
+            var isSunday = printDate.DayOfWeek == DayOfWeek.Sunday;
+            puzzleIds.Add((puzzleId, isSunday));
         }
         return puzzleIds;
     }
