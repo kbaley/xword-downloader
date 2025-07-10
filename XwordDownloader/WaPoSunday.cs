@@ -10,18 +10,12 @@ public class WaPoSunday
             return;
         }
 
-        const string url = "https://cdn1.amuselabs.com/wapo/crossword-pdf";
-        var parms = new Dictionary<string, string>();
-        var date = DateTime.Now.ToString("yyMMdd");
-        parms.Add("id", $"ebirnholz_{date}");
-        parms.Add("set", "wapo-eb");
-        parms.Add("theme", "wapo");
-        parms.Add("locale", "en-US");
-        parms.Add("print", "1");
-        parms.Add("checkPDF", "true");
+        var date = DateTime.Today.ToString("yyMMdd");
+        // July 2025: WaPo changed to a different app and as of today, the print view is not good
+        // Pulling from https://crosswordfiend.com/download/ for now
+        var url = $"https://herbach.dnsalias.com/WaPo/wp{date}.pdf";
         using var httpClient = new HttpClient();
-        using var request = new HttpRequestMessage(HttpMethod.Post, url);
-        request.Content = new FormUrlEncodedContent(parms);
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
         using var response = await httpClient.SendAsync(request);
 
         await PdfDownloader.DownloadPdf($"ebirnholz_{date}.pdf", response);
