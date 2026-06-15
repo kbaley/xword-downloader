@@ -66,11 +66,9 @@ public class PdfDownloader
         var bytes = await response.Content.ReadAsByteArrayAsync();
         var secretsFile = await GetSecretsFile();
         var scopes = new[] { DriveService.ScopeConstants.DriveFile };
-        var credential = await GoogleCredential.FromStreamAsync(new MemoryStream(secretsFile), CancellationToken.None);
-        if (credential == null)
-        {
-            throw new Exception("Failed to create credentials");
-        }
+        var credential = (await CredentialFactory
+            .FromStreamAsync<ServiceAccountCredential>(new MemoryStream(secretsFile), CancellationToken.None))
+            .ToGoogleCredential();
         var scopedCredential = credential.CreateScoped(scopes);
             
         var service = new DriveService(new BaseClientService.Initializer()
