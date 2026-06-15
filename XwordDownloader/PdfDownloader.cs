@@ -17,12 +17,22 @@ public class PdfDownloader
     public static async Task DownloadPdf(string filename, HttpResponseMessage response)
     {
         #if DEBUG
-        await DownloadToGoogleDrive(filename, response);
+        if (IsGoogleDriveConfigured())
+        {
+            await DownloadToGoogleDrive(filename, response);
+        }
         await DownloadLocally(filename, response);
-        return;
-        #endif
+        #else
         await DownloadToGoogleDrive(filename, response);
         await DownloadToAzureStorage(filename, response);
+        #endif
+    }
+
+    private static bool IsGoogleDriveConfigured()
+    {
+        return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("AzureWebJobsStorage")) &&
+               !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleApiSecretsFileName")) &&
+               !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId"));
     }
 
     private static async Task DownloadToAzureStorage(string filename, HttpResponseMessage response)

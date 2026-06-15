@@ -36,4 +36,9 @@
     <None Remove="client_secret_529852509669-tlt1mman6e94cikd529qu9h7gcmmqqrq.apps.googleusercontent.com.json" />
     <None Remove="xword-downloader-1-9805866200d3.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\.github\workflows\main_xword-downloader.yml">
+      <Link>main_xword-downloader.yml</Link>
+    </Content>
+  </ItemGroup>
 </Project>
