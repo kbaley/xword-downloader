@@ -9,10 +9,10 @@ namespace XwordDownloader;
 
 public class PdfDownloader
 {
+    private const string DownloadToAzureFileStorageSettingName = "DownloadToAzureFileStorage";
+
     /// <summary>
-    /// Download the specified response stream to a file in Azure Storage.
-    ///
-    /// The file will be stored in a folder called puzzles which is created if it doesn't exist.
+    /// Download the specified response stream to the configured puzzle destinations.
     /// </summary>
     public static async Task DownloadPdf(string filename, HttpResponseMessage response)
     {
@@ -24,7 +24,10 @@ public class PdfDownloader
         await DownloadLocally(filename, response);
         #else
         await DownloadToGoogleDrive(filename, response);
-        await DownloadToAzureStorage(filename, response);
+        if (IsAzureFileStorageDownloadEnabled())
+        {
+            await DownloadToAzureStorage(filename, response);
+        }
         #endif
     }
 
@@ -33,6 +36,14 @@ public class PdfDownloader
         return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("AzureWebJobsStorage")) &&
                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleApiSecretsFileName")) &&
                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId"));
+    }
+
+    private static bool IsAzureFileStorageDownloadEnabled()
+    {
+        var setting = Environment.GetEnvironmentVariable(DownloadToAzureFileStorageSettingName);
+        return setting?.Equals("true", StringComparison.OrdinalIgnoreCase) == true ||
+               setting?.Equals("1", StringComparison.OrdinalIgnoreCase) == true ||
+               setting?.Equals("yes", StringComparison.OrdinalIgnoreCase) == true;
     }
 
     private static async Task DownloadToAzureStorage(string filename, HttpResponseMessage response)

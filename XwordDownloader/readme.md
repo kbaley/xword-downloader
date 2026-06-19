@@ -1,11 +1,13 @@
-# TimerTrigger - C<span>#</span>
+# xword-downloader
 
-The `TimerTrigger` makes it incredibly easy to have your functions executed on a schedule. This sample demonstrates a simple use case of calling your function every 5 minutes.
+Azure Function that downloads configured crossword PDFs on a timer.
 
-## How it works
+## Configuration
 
-For a `TimerTrigger` to work, you provide a schedule in the form of a [cron expression](https://en.wikipedia.org/wiki/Cron#CRON_expression) (see the link for full details). A cron expression is a string with 6 separate expressions which represent a given schedule via patterns. The pattern we use to represent every 5 minutes is `0 */5 * * * *`. This, in plain text, means: "When seconds is equal to 0, minutes is divisible by 5, for any hour, day of the month, month, day of the week, or year".
+| Setting | Required | Purpose |
+| --- | --- | --- |
+| `AzureWebJobsStorage` | Yes | Azure Functions storage connection string. Also used to read the Google API secrets file from the `secrets` Azure File share. |
+| `GoogleApiSecretsFileName` | Yes | File name of the Google service account JSON file in the `secrets` Azure File share. |
+| `GoogleDriveFolderId` | Yes | Google Drive folder where puzzle PDFs are uploaded. |
+| `DownloadToAzureFileStorage` | No | Set to `true`, `1`, or `yes` to also upload puzzle PDFs to the `puzzles` Azure File share. Defaults to off. |
 
-## Learn more
-
-<TODO> Documentation
