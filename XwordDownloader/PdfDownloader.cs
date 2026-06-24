@@ -40,7 +40,7 @@ public class PdfDownloader
     private static bool IsGoogleDriveConfigured()
     {
         return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId")) &&
-               (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(GoogleApiSecretsJsonSettingName)) ||
+               (!string.IsNullOrWhiteSpace(GetGoogleApiSecretsJson()) ||
                 IsGoogleApiSecretsKeyVaultConfigured() ||
                 IsGoogleApiSecretsFileStorageConfigured());
     }
@@ -129,7 +129,7 @@ public class PdfDownloader
 
     private static async Task<byte[]> GetSecretsFile()
     {
-        var googleApiSecretsJson = Environment.GetEnvironmentVariable(GoogleApiSecretsJsonSettingName);
+        var googleApiSecretsJson = GetGoogleApiSecretsJson();
         if (!string.IsNullOrWhiteSpace(googleApiSecretsJson))
         {
             return Encoding.UTF8.GetBytes(googleApiSecretsJson);
@@ -141,6 +141,18 @@ public class PdfDownloader
         }
 
         return await GetSecretsFileFromAzureFileStorage();
+    }
+
+    private static string? GetGoogleApiSecretsJson()
+    {
+        var setting = Environment.GetEnvironmentVariable(GoogleApiSecretsJsonSettingName);
+        if (string.IsNullOrWhiteSpace(setting))
+        {
+            return null;
+        }
+
+        var trimmed = setting.TrimStart();
+        return trimmed.StartsWith("{", StringComparison.Ordinal) ? setting : null;
     }
 
     private static async Task<byte[]> GetSecretsFileFromKeyVault()
