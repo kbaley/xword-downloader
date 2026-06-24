@@ -13,6 +13,7 @@ namespace XwordDownloader;
 public class PdfDownloader
 {
     private const string DownloadToAzureFileStorageSettingName = "DownloadToAzureFileStorage";
+    private const string GoogleApiSecretsJsonSettingName = "GoogleApiSecretsJson";
     private const string GoogleApiSecretsKeyVaultUriSettingName = "GoogleApiSecretsKeyVaultUri";
     private const string GoogleApiSecretsKeyVaultSecretNameSettingName = "GoogleApiSecretsKeyVaultSecretName";
 
@@ -39,7 +40,9 @@ public class PdfDownloader
     private static bool IsGoogleDriveConfigured()
     {
         return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId")) &&
-               (IsGoogleApiSecretsKeyVaultConfigured() || IsGoogleApiSecretsFileStorageConfigured());
+               (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(GoogleApiSecretsJsonSettingName)) ||
+                IsGoogleApiSecretsKeyVaultConfigured() ||
+                IsGoogleApiSecretsFileStorageConfigured());
     }
 
     private static bool IsGoogleApiSecretsKeyVaultConfigured()
@@ -126,6 +129,12 @@ public class PdfDownloader
 
     private static async Task<byte[]> GetSecretsFile()
     {
+        var googleApiSecretsJson = Environment.GetEnvironmentVariable(GoogleApiSecretsJsonSettingName);
+        if (!string.IsNullOrWhiteSpace(googleApiSecretsJson))
+        {
+            return Encoding.UTF8.GetBytes(googleApiSecretsJson);
+        }
+
         if (IsGoogleApiSecretsKeyVaultConfigured())
         {
             return await GetSecretsFileFromKeyVault();
