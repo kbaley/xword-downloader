@@ -1,6 +1,4 @@
 using Azure;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using Azure.Storage.Files.Shares;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -14,8 +12,6 @@ public class PdfDownloader
 {
     private const string DownloadToAzureFileStorageSettingName = "DownloadToAzureFileStorage";
     private const string GoogleApiSecretsJsonSettingName = "GoogleApiSecretsJson";
-    private const string GoogleApiSecretsKeyVaultUriSettingName = "GoogleApiSecretsKeyVaultUri";
-    private const string GoogleApiSecretsKeyVaultSecretNameSettingName = "GoogleApiSecretsKeyVaultSecretName";
 
     /// <summary>
     /// Download the specified response stream to the configured puzzle destinations.
@@ -41,14 +37,7 @@ public class PdfDownloader
     {
         return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId")) &&
                (!string.IsNullOrWhiteSpace(GetGoogleApiSecretsJson()) ||
-                IsGoogleApiSecretsKeyVaultConfigured() ||
                 IsGoogleApiSecretsFileStorageConfigured());
-    }
-
-    private static bool IsGoogleApiSecretsKeyVaultConfigured()
-    {
-        return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(GoogleApiSecretsKeyVaultUriSettingName)) &&
-               !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(GoogleApiSecretsKeyVaultSecretNameSettingName));
     }
 
     private static bool IsGoogleApiSecretsFileStorageConfigured()
@@ -156,11 +145,6 @@ public class PdfDownloader
             return Encoding.UTF8.GetBytes(googleApiSecretsJson);
         }
 
-        if (IsGoogleApiSecretsKeyVaultConfigured())
-        {
-            return await GetSecretsFileFromKeyVault();
-        }
-
         return await GetSecretsFileFromAzureFileStorage();
     }
 
@@ -174,26 +158,6 @@ public class PdfDownloader
 
         var trimmed = setting.TrimStart();
         return trimmed.StartsWith("{", StringComparison.Ordinal) ? setting : null;
-    }
-
-    private static async Task<byte[]> GetSecretsFileFromKeyVault()
-    {
-        var keyVaultUri = Environment.GetEnvironmentVariable(GoogleApiSecretsKeyVaultUriSettingName);
-        var secretName = Environment.GetEnvironmentVariable(GoogleApiSecretsKeyVaultSecretNameSettingName);
-
-        if (string.IsNullOrWhiteSpace(keyVaultUri))
-        {
-            throw new Exception($"{GoogleApiSecretsKeyVaultUriSettingName} not found");
-        }
-
-        if (string.IsNullOrWhiteSpace(secretName))
-        {
-            throw new Exception($"{GoogleApiSecretsKeyVaultSecretNameSettingName} not found");
-        }
-
-        var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
-        var secret = (await client.GetSecretAsync(secretName)).Value;
-        return Encoding.UTF8.GetBytes(secret.Value);
     }
 
     private static async Task<byte[]> GetSecretsFileFromAzureFileStorage()
