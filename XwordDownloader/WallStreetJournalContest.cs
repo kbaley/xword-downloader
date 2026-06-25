@@ -10,6 +10,8 @@ public class WallStreetJournalContest
 {
     private const string PuzzleIndexUrl = "https://www.wsj.com/news/puzzle";
     private const string PdfBaseUrl = "https://prod-i.a.dj.com/public/resources/documents/";
+    private const string DirectPdfUrlSettingName = "WallStreetJournalPuzzlePdfUrl";
+    private const string DirectPdfDateSettingName = "WallStreetJournalPuzzlePdfDate";
     private static readonly Regex CrosswordArticleRegex = new(
         """https://www\.wsj\.com/articles/(?<slug>[^"<>\\]*?-crossword-[^"<>\\]*)""",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -19,14 +21,48 @@ public class WallStreetJournalContest
         using var httpClient = new HttpClient(new HttpClientHandler { UseCookies = false });
         ConfigureBrowserHeaders(httpClient);
 
+        var configuredPdfUrl = GetConfiguredPdfUrl();
+        if (configuredPdfUrl is not null)
+        {
+            await DownloadPdf(httpClient, configuredPdfUrl);
+            return DownloadResult.Succeeded($"Downloaded WSJ puzzle from configured URL {configuredPdfUrl}.");
+        }
+
         var articleSlug = await GetLatestCrosswordSlug(httpClient);
         var pdfUrl = await FindPuzzlePdfUrl(httpClient, articleSlug);
-        var filename = $"WSJ-{DateTime.Now:yyyy-MM-dd}.pdf";
+        await DownloadPdf(httpClient, pdfUrl);
+        return DownloadResult.Succeeded($"Downloaded WSJ puzzle from {pdfUrl}.");
+    }
+
+    private static string? GetConfiguredPdfUrl()
+    {
+        var pdfUrl = Environment.GetEnvironmentVariable(DirectPdfUrlSettingName);
+        if (string.IsNullOrWhiteSpace(pdfUrl))
+        {
+            return null;
+        }
+
+        var configuredDate = Environment.GetEnvironmentVariable(DirectPdfDateSettingName);
+        if (string.IsNullOrWhiteSpace(configuredDate))
+        {
+            return pdfUrl;
+        }
+
+        if (!DateOnly.TryParse(configuredDate, out var date))
+        {
+            throw new Exception($"{DirectPdfDateSettingName} must be a date in yyyy-MM-dd format.");
+        }
+
+        return date == DateOnly.FromDateTime(DateTime.UtcNow) ? pdfUrl : null;
+    }
+
+    private static async Task DownloadPdf(HttpClient httpClient, string pdfUrl)
+    {
+        var filename = $"WSJ-{DateTime.UtcNow:yyyy-MM-dd}.pdf";
         using var request = new HttpRequestMessage(HttpMethod.Get, pdfUrl);
         using var response = await httpClient.SendAsync(request);
 
         await PdfDownloader.DownloadPdf(filename, response);
-        return DownloadResult.Succeeded($"Downloaded WSJ puzzle from {pdfUrl}.");
     }
 
     private static void ConfigureBrowserHeaders(HttpClient httpClient)
@@ -43,7 +79,15 @@ public class WallStreetJournalContest
 
     private static async Task<string> GetLatestCrosswordSlug(HttpClient httpClient)
     {
-        var html = await httpClient.GetStringAsync(PuzzleIndexUrl);
+        using var response = await httpClient.GetAsync(PuzzleIndexUrl);
+        if (!response.IsSuccessStatusCode)
+        {
+            var body = await response.Content.ReadAsStringAsync();
+            throw new Exception(
+                $"Could not fetch Wall Street Journal puzzle index. HTTP {(int)response.StatusCode} {response.ReasonPhrase}. Response preview: {Preview(body)}");
+        }
+
+        var html = await response.Content.ReadAsStringAsync();
         var match = CrosswordArticleRegex.Match(html);
         if (!match.Success)
         {
@@ -117,5 +161,11 @@ public class WallStreetJournalContest
         {
             yield return words[1..];
         }
+    }
+
+    private static string Preview(string value)
+    {
+        var singleLine = Regex.Replace(value, @"\s+", " ").Trim();
+        return singleLine.Length <= 500 ? singleLine : singleLine[..500];
     }
 }

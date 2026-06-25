@@ -13,3 +13,5 @@ Azure Function that downloads configured crossword PDFs on a timer.
 | `ResendApiKey` | No | Resend API key used to send the run summary email. Email is skipped if this or the other Resend settings are missing. |
 | `ResendFromEmail` | No | Verified Resend sender, for example `Crossword Downloader <crosswords@example.com>`. |
 | `ResendToEmail` | No | Recipient email address for run summaries. Separate multiple recipients with commas or semicolons. |
+| `WallStreetJournalPuzzlePdfUrl` | No | Direct WSJ PDF URL to use when the WSJ article index cannot be scraped. |
+| `WallStreetJournalPuzzlePdfDate` | No | Date in `yyyy-MM-dd` format for the direct WSJ PDF URL. If set, stale URLs are ignored on later days. |
