@@ -10,4 +10,6 @@ Azure Function that downloads configured crossword PDFs on a timer.
 | `GoogleApiSecretsFileName` | Yes | File name of the Google service account JSON file in the `secrets` Azure File share. |
 | `GoogleDriveFolderId` | Yes | Google Drive folder where puzzle PDFs are uploaded. |
 | `DownloadToAzureFileStorage` | No | Set to `true`, `1`, or `yes` to also upload puzzle PDFs to the `puzzles` Azure File share. Defaults to off. |
-
+| `ResendApiKey` | No | Resend API key used to send the run summary email. Email is skipped if this or the other Resend settings are missing. |
+| `ResendFromEmail` | No | Verified Resend sender, for example `Crossword Downloader <crosswords@example.com>`. |
+| `ResendToEmail` | No | Recipient email address for run summaries. Separate multiple recipients with commas or semicolons. |

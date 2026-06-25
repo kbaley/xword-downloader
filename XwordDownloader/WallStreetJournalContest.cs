@@ -14,7 +14,7 @@ public class WallStreetJournalContest
         """https://www\.wsj\.com/articles/(?<slug>[^"<>\\]*?-crossword-[^"<>\\]*)""",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    public async Task DownloadPuzzle()
+    public async Task<DownloadResult> DownloadPuzzle()
     {
         using var httpClient = new HttpClient(new HttpClientHandler { UseCookies = false });
         ConfigureBrowserHeaders(httpClient);
@@ -26,6 +26,7 @@ public class WallStreetJournalContest
         using var response = await httpClient.SendAsync(request);
 
         await PdfDownloader.DownloadPdf(filename, response);
+        return DownloadResult.Succeeded($"Downloaded WSJ puzzle from {pdfUrl}.");
     }
 
     private static void ConfigureBrowserHeaders(HttpClient httpClient)

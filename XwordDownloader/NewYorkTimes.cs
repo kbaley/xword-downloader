@@ -10,7 +10,7 @@ public class NewYorkTimes
     /// This requires a NYTS_COOKIE environment variable to be set with the NYT-S cookie value.
     /// I.e. you need a subscription
     /// </summary>
-    public async Task DownloadPuzzle(int numberOfDays = 1)
+    public async Task<DownloadResult> DownloadPuzzle(int numberOfDays = 1)
     {
         var nytsCookie = Environment.GetEnvironmentVariable("NYTS_COOKIE") ?? "";
         if (string.IsNullOrEmpty(nytsCookie))
@@ -48,6 +48,8 @@ public class NewYorkTimes
             response = await httpClient.SendAsync(request);
             await PdfDownloader.DownloadPdf($"{puzzleId}.pdf", response);
         }
+
+        return DownloadResult.Succeeded($"Downloaded {puzzleIds.Count} puzzle(s).");
     }
 
     private static List<(int PuzzleId, bool IsSunday)> ParsePuzzleIds(string jsonResponse)

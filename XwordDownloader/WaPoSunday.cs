@@ -3,11 +3,11 @@ namespace XwordDownloader;
 public class WaPoSunday
 {
 
-    public async Task DownloadPuzzle()
+    public async Task<DownloadResult> DownloadPuzzle()
     {
         if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday)
         {
-            return;
+            return DownloadResult.Skipped("WaPo Sunday only runs on Sundays.");
         }
 
         var date = DateTime.Today.ToString("yyMMdd");
@@ -19,5 +19,6 @@ public class WaPoSunday
         using var response = await httpClient.SendAsync(request);
 
         await PdfDownloader.DownloadPdf($"ebirnholz_{date}.pdf", response);
+        return DownloadResult.Succeeded($"Downloaded WaPo Sunday puzzle for {date}.");
     }
 }
