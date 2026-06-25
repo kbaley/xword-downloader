@@ -10,6 +10,7 @@ public class WallStreetJournalContest
 {
     private const string PuzzleIndexUrl = "https://www.wsj.com/news/puzzle";
     private const string PdfBaseUrl = "https://prod-i.a.dj.com/public/resources/documents/";
+    private const string DownloadEnabledSettingName = "WallStreetJournalDownloadEnabled";
     private const string DirectPdfUrlSettingName = "WallStreetJournalPuzzlePdfUrl";
     private const string DirectPdfDateSettingName = "WallStreetJournalPuzzlePdfDate";
     private static readonly Regex CrosswordArticleRegex = new(
@@ -18,6 +19,11 @@ public class WallStreetJournalContest
 
     public async Task<DownloadResult> DownloadPuzzle()
     {
+        if (!IsDownloadEnabled())
+        {
+            return DownloadResult.Skipped("WSJ download is disabled by app setting.");
+        }
+
         using var httpClient = new HttpClient(new HttpClientHandler { UseCookies = false });
         ConfigureBrowserHeaders(httpClient);
 
@@ -32,6 +38,20 @@ public class WallStreetJournalContest
         var pdfUrl = await FindPuzzlePdfUrl(httpClient, articleSlug);
         await DownloadPdf(httpClient, pdfUrl);
         return DownloadResult.Succeeded($"Downloaded WSJ puzzle from {pdfUrl}.");
+    }
+
+    private static bool IsDownloadEnabled()
+    {
+        var setting = Environment.GetEnvironmentVariable(DownloadEnabledSettingName);
+        if (string.IsNullOrWhiteSpace(setting))
+        {
+            return true;
+        }
+
+        return !setting.Equals("false", StringComparison.OrdinalIgnoreCase) &&
+               !setting.Equals("0", StringComparison.OrdinalIgnoreCase) &&
+               !setting.Equals("no", StringComparison.OrdinalIgnoreCase) &&
+               !setting.Equals("off", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string? GetConfiguredPdfUrl()
