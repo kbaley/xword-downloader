@@ -4,14 +4,12 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Upload;
-using System.Text;
 
 namespace XwordDownloader;
 
 public class PdfDownloader
 {
     private const string DownloadToAzureFileStorageSettingName = "DownloadToAzureFileStorage";
-    private const string GoogleApiSecretsJsonSettingName = "GoogleApiSecretsJson";
 
     /// <summary>
     /// Download the specified response stream to the configured puzzle destinations.
@@ -35,15 +33,9 @@ public class PdfDownloader
 
     private static bool IsGoogleDriveConfigured()
     {
-        return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId")) &&
-               (!string.IsNullOrWhiteSpace(GetGoogleApiSecretsJson()) ||
-                IsGoogleApiSecretsFileStorageConfigured());
-    }
-
-    private static bool IsGoogleApiSecretsFileStorageConfigured()
-    {
         return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("AzureWebJobsStorage")) &&
-               !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleApiSecretsFileName"));
+               !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleApiSecretsFileName")) &&
+               !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GoogleDriveFolderId"));
     }
 
     private static bool IsAzureFileStorageDownloadEnabled()
@@ -106,11 +98,6 @@ public class PdfDownloader
             Parents = new List<string> { parentFolderId }
         };
 
-        if (await GoogleDriveFileExists(service, parentFolderId, finalFilename))
-        {
-            return;
-        }
-
         using var stream = new MemoryStream(bytes);
         var request = service.Files.Create(fileMetadata, stream, "application/pdf");
         request.Fields = "id";
@@ -121,46 +108,7 @@ public class PdfDownloader
         }
     }
 
-    private static async Task<bool> GoogleDriveFileExists(DriveService service, string parentFolderId, string filename)
-    {
-        var request = service.Files.List();
-        request.Q = $"'{EscapeGoogleDriveQueryValue(parentFolderId)}' in parents and name = '{EscapeGoogleDriveQueryValue(filename)}' and trashed = false";
-        request.Fields = "files(id)";
-        request.PageSize = 1;
-
-        var response = await request.ExecuteAsync();
-        return response.Files.Count > 0;
-    }
-
-    private static string EscapeGoogleDriveQueryValue(string value)
-    {
-        return value.Replace("\\", "\\\\").Replace("'", "\\'");
-    }
-
     private static async Task<byte[]> GetSecretsFile()
-    {
-        var googleApiSecretsJson = GetGoogleApiSecretsJson();
-        if (!string.IsNullOrWhiteSpace(googleApiSecretsJson))
-        {
-            return Encoding.UTF8.GetBytes(googleApiSecretsJson);
-        }
-
-        return await GetSecretsFileFromAzureFileStorage();
-    }
-
-    private static string? GetGoogleApiSecretsJson()
-    {
-        var setting = Environment.GetEnvironmentVariable(GoogleApiSecretsJsonSettingName);
-        if (string.IsNullOrWhiteSpace(setting))
-        {
-            return null;
-        }
-
-        var trimmed = setting.TrimStart();
-        return trimmed.StartsWith("{", StringComparison.Ordinal) ? setting : null;
-    }
-
-    private static async Task<byte[]> GetSecretsFileFromAzureFileStorage()
     {
         var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage") ??
                                throw new Exception("AzureWebJobsStorage not found");
