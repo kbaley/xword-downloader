@@ -117,6 +117,11 @@ public class PdfDownloader
             Parents = new List<string> { parentFolderId }
         };
 
+        if (await GoogleDriveFileExists(service, parentFolderId, finalFilename))
+        {
+            return;
+        }
+
         using var stream = new MemoryStream(bytes);
         var request = service.Files.Create(fileMetadata, stream, "application/pdf");
         request.Fields = "id";
@@ -125,6 +130,22 @@ public class PdfDownloader
         {
             throw new Exception($"Upload failed for {filename}");
         }
+    }
+
+    private static async Task<bool> GoogleDriveFileExists(DriveService service, string parentFolderId, string filename)
+    {
+        var request = service.Files.List();
+        request.Q = $"'{EscapeGoogleDriveQueryValue(parentFolderId)}' in parents and name = '{EscapeGoogleDriveQueryValue(filename)}' and trashed = false";
+        request.Fields = "files(id)";
+        request.PageSize = 1;
+
+        var response = await request.ExecuteAsync();
+        return response.Files.Count > 0;
+    }
+
+    private static string EscapeGoogleDriveQueryValue(string value)
+    {
+        return value.Replace("\\", "\\\\").Replace("'", "\\'");
     }
 
     private static async Task<byte[]> GetSecretsFile()

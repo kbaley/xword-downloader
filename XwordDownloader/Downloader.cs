@@ -16,7 +16,7 @@ namespace XwordDownloader
         public async Task Run([TimerTrigger("0 8 * * *")] TimerInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            await new NewYorkTimes().DownloadPuzzle();
+            await TryDownload("New York Times", () => new NewYorkTimes().DownloadPuzzle());
             await TryDownload("Washington Post Sunday", () => new WaPoSunday().DownloadPuzzle());
             await TryDownload("Wall Street Journal", () => new WallStreetJournalContest().DownloadPuzzle());
 
